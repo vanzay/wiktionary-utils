@@ -4,3 +4,4 @@ DB_FILENAME = 'enwiktionary.db'
 LANGS = ['english', 'spanish']
 WIKTIONARY_DOMAIN = 'en.wiktionary.org'
 DICT_FILENAME = 'terms_dict.json'
+DICT_LANG = 'es'

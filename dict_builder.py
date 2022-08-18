@@ -2,7 +2,7 @@ import json
 
 import lxml.html
 
-from config import DB_FILENAME, DICT_FILENAME
+from config import DB_FILENAME, DICT_FILENAME, DICT_LANG
 from db import DB, ArticleModel, process_articles
 
 
@@ -26,9 +26,13 @@ def handle_row(row):
     print(f'Processed article {article_id} {title}')
 
 
-def extract_term_forms(html) -> set:
+def extract_term_forms(html: str) -> set:
     tree = lxml.html.fromstring(html)
-    return set([elem.text_content() for elem in tree.xpath("//*[contains(@class, 'form-of ')]")])
+    forms = [elem.text_content() for elem in tree.xpath("//*[contains(@class, 'form-of ')]")]
+    conjugation_tables = tree.xpath("//div[contains(@class, 'NavContent')]")
+    for table in conjugation_tables:
+        forms.extend(node.text_content() for node in table.xpath(f".//span[contains(@lang, '{DICT_LANG}')]"))
+    return set(forms)
 
 
 def save_dict(filename: str):
